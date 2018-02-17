@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    <CheckBox
+        android:id="@+id/chk_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tache"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="date"
+        android:layout_below="@id/chk_box"
+        android:layout_marginLeft="33dp" />
+
+</RelativeLayout>

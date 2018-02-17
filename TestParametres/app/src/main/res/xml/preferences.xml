@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="popup_switch"
+        android:summary="Affiche un popup avec un message"
+        android:title="Afficher message Popup" />
+    <EditTextPreference
+        android:defaultValue="Utilisateur1"
+        android:key="nom_edit_text"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Nom d'utilisateur"/>
+</PreferenceScreen>
