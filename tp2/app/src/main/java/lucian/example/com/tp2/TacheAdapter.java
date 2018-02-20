@@ -44,8 +44,9 @@ public class TacheAdapter extends RecyclerView.Adapter <TacheAdapter.TacheViewHo
             return;
         String nom = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_NOM_TACHE));
         String dateTache = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_DATE_TACHE));
+        //String descrTache = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_DESCRIPTION_TACHE)); //a enlever
         holder.nomTacheCheckBox.setText(nom);
-        holder.dateTextView.setText(dateTache);
+        holder.dateTextView.setText(dateTache); //a changer
         long id = mCursor.getLong(mCursor.getColumnIndex(TacheContrat.Tache._ID));
         holder.itemView.setTag(id);
     }

@@ -1,5 +1,6 @@
 package lucian.example.com.tp2;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -15,12 +16,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import lucian.example.com.tp2.Data.TacheContrat;
 import lucian.example.com.tp2.Data.TacheDBHelper;
 
 public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase mDb;
     private TacheAdapter mAdapter;
+    // Unique tag required for the intent extra
+    public static final String EXTRA_MESSAGE = "lucian.example.com.tp2.extra.MESSAGE";
+    // Unique tag for the intent reply
+    public static final int TEXT_REQUEST = 1;
+    public ArrayList<ContentValues> list = new ArrayList<ContentValues>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +56,21 @@ public class MainActivity extends AppCompatActivity {
         // Set layout for the RecyclerView, because it's a list we are using the linear layout
         tacheRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         TacheDBHelper dbHelper = new TacheDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
+////mDb = TacheDBHelper. getInstance(this).getWritableDatabase();////!!!!!!!!!!!!!!!!!!!
+
+        Intent intent = getIntent();//// de incercat cu startactivityforesult, ori inca o metoda ajoutertache care s-o apelez din oncreate cu liniile intentului
+        if(intent!=null) {
+            Bundle extras = intent.getExtras();
+            String nomTache = extras.getString("EXTRA_NOM");/////
+            String descriptionTache = extras.getString("EXTRA_DESCRIPTION");/////
+            String dateTache = extras.getString("EXTRA_DATE");/////
+            if (nomTache != null && descriptionTache != null && dateTache != null) {
+                ajouterNouvelleTache(nomTache, descriptionTache, dateTache);
+            }
+        }
 
         Cursor cursor = obtenirTache();
         mAdapter = new TacheAdapter(this, cursor);
@@ -107,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
     public void ajouterTache(View view) {
         Intent intent = new Intent(this, NouvelleTache.class);
         startActivity(intent);
+
+       // String message = "";
+
+      //  intent.putExtra(EXTRA_MESSAGE, message);
+
+       //startActivityForResult(intent, 1);
     }
 
     private Cursor obtenirTache() {
@@ -133,6 +160,16 @@ public class MainActivity extends AppCompatActivity {
     private boolean retirerTache(long id) {
         return mDb.delete(TacheContrat.Tache.NOM_TABLE,
                 TacheContrat.Tache._ID + "=" + id, null) > 0;
+    }
+
+    private long ajouterNouvelleTache (String nom, String description, String dateTache) {
+        ContentValues cv = new ContentValues();
+        cv.put(TacheContrat.Tache.COLONNE_NOM_TACHE, nom);
+        cv.put(TacheContrat.Tache.COLONNE_DESCRIPTION_TACHE, description);
+        cv.put((TacheContrat.Tache.COLONNE_DATE_TACHE).toString(), dateTache); //????  transformer date en string
+        list.add(cv);
+        return mDb.insert(TacheContrat.Tache.NOM_TABLE, null, cv);
+
     }
 
 

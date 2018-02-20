@@ -11,8 +11,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TacheDBHelper extends SQLiteOpenHelper {
 
+    //private static TacheDBHelper dbInstance; ////
+
     private final static String DATABASE_NAME = "taches.db";
     private final static int DATABASE_VERSION = 1;
+
+  //  public static synchronized TacheDBHelper getInstance(Context context) { ////
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+     //   if (dbInstance == null) {
+           // dbInstance = new TacheDBHelper(context.getApplicationContext());
+   //    }
+      //  return dbInstance;
+   // }
 
     public TacheDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
