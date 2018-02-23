@@ -41,7 +41,7 @@ public class NouvelleTache extends AppCompatActivity {
         editDescription = (EditText) findViewById(R.id.edit_description);
         editDate = (EditText) findViewById(R.id.edit_date);
 
-      //  Intent intent = getIntent(); ////
+       // Intent intent = getIntent(); ////
 
       //  TacheDBHelper dbHelper = new TacheDBHelper(this);
       ////  mDb = dbHelper.getWritableDatabase();
@@ -100,14 +100,26 @@ public class NouvelleTache extends AppCompatActivity {
         //editDescription.getText().clear();
        // editDate.getText().clear();
 
-        Intent intent = new Intent(this, MainActivity.class); /////
-        Bundle extras = new Bundle();
-        extras.putString("EXTRA_NOM",editTache.getText().toString());
-        extras.putString("EXTRA_DESCRIPTION",editDescription.getText().toString());
-        extras.putString("EXTRA_DATE",laDate);
+     //   Intent intent = new Intent(this, MainActivity.class); /////
+      //  Bundle extras = new Bundle();
+     //   extras.putString("EXTRA_NOM",editTache.getText().toString());
+     //   extras.putString("EXTRA_DESCRIPTION",editDescription.getText().toString());
+     //   extras.putString("EXTRA_DATE",laDate);
 
-        intent.putExtras(extras);
-        startActivity(intent);
+      //  intent.putExtras(extras);
+      //  startActivity(intent);
+
+
+        Intent replyIntent = new Intent();
+        replyIntent.putExtra("EXTRA_NOM",editTache.getText().toString());
+        replyIntent.putExtra("EXTRA_DESCRIPTION",editDescription.getText().toString());
+        replyIntent.putExtra("EXTRA_DATE",laDate);
+
+        setResult(RESULT_OK, replyIntent);
+
+      //  Log.d(LOG_TAG, "End SecondaryActivity");
+
+        finish();
 
     }
 
@@ -129,4 +141,73 @@ public class NouvelleTache extends AppCompatActivity {
 
         );
     } */
+
+    public void returnReply(View view) {
+        // Get the reply message from the edit text.
+       // String reply = mReply.getText().toString();
+
+        // Create a new intent for the reply, add the reply message to it as an extra,
+        // set the intent result, and close the activity.
+     //   Intent replyIntent = new Intent();
+     //   replyIntent.putExtra(EXTRA_REPLY, reply);
+     //   setResult(RESULT_OK, replyIntent);
+
+    //    Log.d(LOG_TAG, "End SecondaryActivity");
+
+     //   finish();
+    }
+
+    /**
+     * Lifecycle callback for start.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+    }
+
+    /**
+     * Lifecycle callback for restart.
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        Log.d(LOG_TAG, "onRestart");
+    }
+
+    /**
+     * Lifecycle callback for resume.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume");
+    }
+
+    /**
+     * Lifecycle callback for pause.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+    }
+
+    /**
+     * Lifecycle callback for stop.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
+    }
+
+    /**
+     * Lifecycle callback for destroy.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
+    }
 }

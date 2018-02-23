@@ -12,9 +12,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,9 +30,12 @@ public class MainActivity extends AppCompatActivity {
     private TacheAdapter mAdapter;
     // Unique tag required for the intent extra
     public static final String EXTRA_MESSAGE = "lucian.example.com.tp2.extra.MESSAGE";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // Unique tag for the intent reply
     public static final int TEXT_REQUEST = 1;
-    public ArrayList<ContentValues> list = new ArrayList<ContentValues>();
+    View ChildView ;
+    int position;
+   // public ArrayList<ContentValues> list = new ArrayList<ContentValues>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-       // FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-     //   fab.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-          //  public void onClick(View view) {
-            //    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-              //          .setAction("Action", null).show();
-          //  }
-      //  });
-
-        // final CheckBox checkBox = (CheckBox) findViewById(R.id.chk_box);
 
         RecyclerView tacheRecyclerView;
 
@@ -59,24 +55,54 @@ public class MainActivity extends AppCompatActivity {
 
         TacheDBHelper dbHelper = new TacheDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
-////mDb = TacheDBHelper. getInstance(this).getWritableDatabase();////!!!!!!!!!!!!!!!!!!!
-
-        Intent intent = getIntent();//// de incercat cu startactivityforesult, ori inca o metoda ajoutertache care s-o apelez din oncreate cu liniile intentului
-        if(intent!=null) {
-            Bundle extras = intent.getExtras();
-            String nomTache = extras.getString("EXTRA_NOM");/////
-            String descriptionTache = extras.getString("EXTRA_DESCRIPTION");/////
-            String dateTache = extras.getString("EXTRA_DATE");/////
-            if (nomTache != null && descriptionTache != null && dateTache != null) {
-                ajouterNouvelleTache(nomTache, descriptionTache, dateTache);
-            }
-        }
 
         Cursor cursor = obtenirTache();
         mAdapter = new TacheAdapter(this, cursor);
         tacheRecyclerView.setAdapter(mAdapter);
 
+       tacheRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
 
+            GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+
+                @Override public boolean onSingleTapUp(MotionEvent motionEvent) {
+
+                    return true;
+                }
+
+            });
+
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView Recyclerview, MotionEvent motionEvent) {
+
+                ChildView = Recyclerview.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+                if(ChildView != null && gestureDetector.onTouchEvent(motionEvent)) {
+                 //  position = (long) Recyclerview.getTag();
+                   position = Recyclerview.getChildAdapterPosition(ChildView);
+
+                   Toast.makeText(MainActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show(); //
+                   boolean b = retirerTache(position);
+                   // Toast.makeText(MainActivity.this, String.valueOf(b), Toast.LENGTH_SHORT).show();
+                    mAdapter.echangerCurseur(obtenirTache());
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView Recyclerview, MotionEvent motionEvent) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+
+
+
+/*
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT) {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
@@ -91,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(tacheRecyclerView);
 
-
-
-
+*/
+   /*
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean switchPref = sharedPref.getBoolean(SettingsActivity.CLE_SWITCH,false);
         if(switchPref) {
             // checkBox.setTextSize(getResources().getDimension(R.dimen.grande_police));
         }
+     */
     }
 
     @Override
@@ -127,13 +153,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void ajouterTache(View view) {
         Intent intent = new Intent(this, NouvelleTache.class);
-        startActivity(intent);
+       // startActivity(intent);
 
        // String message = "";
 
       //  intent.putExtra(EXTRA_MESSAGE, message);
 
        //startActivityForResult(intent, 1);
+
+       startActivityForResult(intent, TEXT_REQUEST);
     }
 
     private Cursor obtenirTache() {
@@ -157,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
  //   }
 
-    private boolean retirerTache(long id) {
+    private boolean retirerTache(int id) {
         return mDb.delete(TacheContrat.Tache.NOM_TABLE,
                 TacheContrat.Tache._ID + "=" + id, null) > 0;
     }
@@ -167,10 +195,87 @@ public class MainActivity extends AppCompatActivity {
         cv.put(TacheContrat.Tache.COLONNE_NOM_TACHE, nom);
         cv.put(TacheContrat.Tache.COLONNE_DESCRIPTION_TACHE, description);
         cv.put((TacheContrat.Tache.COLONNE_DATE_TACHE).toString(), dateTache); //????  transformer date en string
-        list.add(cv);
+     //   list.add(cv);
         return mDb.insert(TacheContrat.Tache.NOM_TABLE, null, cv);
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Test for the right intent reply
+        if (requestCode == TEXT_REQUEST) {
+            // Test to make sure the intent reply result was good.
+            if (resultCode == RESULT_OK) {
+              //  String reply = data.getStringExtra(NouvelleTache.EXTRA_REPLY);
+           //     String s = getIntent().getStringExtra("EXTRA_SESSION_ID");
+                  String nomTache = data.getStringExtra("EXTRA_NOM");/////
+                  String descriptionTache = data.getStringExtra("EXTRA_DESCRIPTION");/////
+                  String dateTache = data.getStringExtra("EXTRA_DATE");/////
+                  if (nomTache != "" && descriptionTache != "" && dateTache != "") {
+                      ajouterNouvelleTache(nomTache, descriptionTache, dateTache);
+                      mAdapter.echangerCurseur(obtenirTache());
+                  }
+                //  }
+            }
+        }
+    }
+
+    /**
+     * Lifecycle callback for start.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+    }
+
+    /**
+     * Lifecycle callback for restart.
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        Log.d(LOG_TAG, "onRestart");
+    }
+
+    /**
+     * Lifecycle callback for resume.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume");
+    }
+
+    /**
+     * Lifecycle callback for pause.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+    }
+
+    /**
+     * Lifecycle callback for stop.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
+    }
+
+    /**
+     * Lifecycle callback for destroy.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
+    }
+
 
 
 

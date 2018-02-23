@@ -4,7 +4,9 @@ package lucian.example.com.tp2;
  * Created by lucian on 2018-02-16.
  */
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,15 @@ public class TacheAdapter extends RecyclerView.Adapter <TacheAdapter.TacheViewHo
         // Pour obtenir le layout d'un élément du RecyclerView
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.element_liste, parent, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Boolean switchPref = sharedPref.getBoolean(SettingsActivity.CLE_SWITCH,false);
+        CheckBox nomTacheCheckBox = (CheckBox) view.findViewById(R.id.chk_box);
+        if(switchPref) {
+            nomTacheCheckBox.setTextSize(32);
+        }
+        else  {
+            nomTacheCheckBox.setTextSize(24);
+        }
         return new TacheViewHolder(view);
     }
 
@@ -44,9 +55,8 @@ public class TacheAdapter extends RecyclerView.Adapter <TacheAdapter.TacheViewHo
             return;
         String nom = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_NOM_TACHE));
         String dateTache = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_DATE_TACHE));
-        //String descrTache = mCursor.getString(mCursor.getColumnIndex(TacheContrat.Tache.COLONNE_DESCRIPTION_TACHE)); //a enlever
         holder.nomTacheCheckBox.setText(nom);
-        holder.dateTextView.setText(dateTache); //a changer
+        holder.dateTextView.setText(dateTache);
         long id = mCursor.getLong(mCursor.getColumnIndex(TacheContrat.Tache._ID));
         holder.itemView.setTag(id);
     }

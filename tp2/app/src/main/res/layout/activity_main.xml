@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     tools:context="lucian.example.com.tp2.MainActivity">
 
+
+
     <android.support.design.widget.AppBarLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,17 +23,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_below="@id/toolbar"
+        android:layout_marginTop="50dp"
         >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/vue_les_taches"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"/>
 
 
     </LinearLayout>
@@ -42,6 +49,10 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/plus"
-        android:onClick="ajouterTache"/>
+        android:onClick="ajouterTache"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+
+
 
 </android.support.design.widget.CoordinatorLayout>
