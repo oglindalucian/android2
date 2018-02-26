@@ -41,7 +41,7 @@ public class TacheAdapter extends RecyclerView.Adapter <TacheAdapter.TacheViewHo
         Boolean switchPref = sharedPref.getBoolean(SettingsActivity.CLE_SWITCH,false);
         CheckBox nomTacheCheckBox = (CheckBox) view.findViewById(R.id.chk_box);
         if(switchPref) {
-            nomTacheCheckBox.setTextSize(32);
+            nomTacheCheckBox.setTextSize(32);  //changer la taille de la police
         }
         else  {
             nomTacheCheckBox.setTextSize(24);

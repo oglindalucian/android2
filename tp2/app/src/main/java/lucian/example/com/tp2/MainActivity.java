@@ -2,25 +2,18 @@ package lucian.example.com.tp2;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.util.ArrayList;
+import android.view.View;
 
 import lucian.example.com.tp2.Data.TacheContrat;
 import lucian.example.com.tp2.Data.TacheDBHelper;
@@ -33,9 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // Unique tag for the intent reply
     public static final int TEXT_REQUEST = 1;
-    View ChildView ;
-    int position;
-   // public ArrayList<ContentValues> list = new ArrayList<ContentValues>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         TacheDBHelper dbHelper = new TacheDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
+        mDb = dbHelper.getWritableDatabase(); //obtenir la base de donnees
 
         Cursor cursor = obtenirTache();
         mAdapter = new TacheAdapter(this, cursor);
-        tacheRecyclerView.setAdapter(mAdapter);
+        tacheRecyclerView.setAdapter(mAdapter); //charger les donnees dans le recycler view
 
-       tacheRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+  /*     tacheRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
 
             GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -99,10 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-/*
+*/
+    //lors du swipe de gauche vers la droite - effacer une tache
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT) {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
@@ -117,14 +106,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(tacheRecyclerView);
 
-*/
-   /*
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean switchPref = sharedPref.getBoolean(SettingsActivity.CLE_SWITCH,false);
-        if(switchPref) {
-            // checkBox.setTextSize(getResources().getDimension(R.dimen.grande_police));
-        }
-     */
+
+
     }
 
     @Override
@@ -151,19 +134,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //fonction qui permet d'ouvrir une nouvelle activite qui permet de creer une nouvelle tache
     public void ajouterTache(View view) {
         Intent intent = new Intent(this, NouvelleTache.class);
-       // startActivity(intent);
-
-       // String message = "";
-
-      //  intent.putExtra(EXTRA_MESSAGE, message);
-
-       //startActivityForResult(intent, 1);
-
-       startActivityForResult(intent, TEXT_REQUEST);
+        startActivityForResult(intent, TEXT_REQUEST);
     }
 
+    //envoie une requette a la BD pour obtenir les taches de la BD
     private Cursor obtenirTache() {
         return mDb.query(
                 TacheContrat.Tache.NOM_TABLE,
@@ -177,19 +154,13 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-   // private long ajouterNouvelleTache (String nom, String dateTache) {
-      //  ContentValues cv = new ContentValues();
-     //   cv.put(TacheContrat.Tache.COLONNE_NOM_TACHE, nom);
-      //  cv.put(String.valueOf(TacheContrat.Tache.COLONNE_DATE_TACHE), dateTache); //????  transformer date en string
-     //   return mDb.insert(TacheContrat.Tache.NOM_TABLE, null, cv);
-
- //   }
-
-    private boolean retirerTache(int id) {
+    //retirer une tache
+    private boolean retirerTache(long id) {
         return mDb.delete(TacheContrat.Tache.NOM_TABLE,
                 TacheContrat.Tache._ID + "=" + id, null) > 0;
     }
 
+    //ajouter une tache
     private long ajouterNouvelleTache (String nom, String description, String dateTache) {
         ContentValues cv = new ContentValues();
         cv.put(TacheContrat.Tache.COLONNE_NOM_TACHE, nom);
@@ -208,16 +179,14 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == TEXT_REQUEST) {
             // Test to make sure the intent reply result was good.
             if (resultCode == RESULT_OK) {
-              //  String reply = data.getStringExtra(NouvelleTache.EXTRA_REPLY);
-           //     String s = getIntent().getStringExtra("EXTRA_SESSION_ID");
-                  String nomTache = data.getStringExtra("EXTRA_NOM");/////
-                  String descriptionTache = data.getStringExtra("EXTRA_DESCRIPTION");/////
-                  String dateTache = data.getStringExtra("EXTRA_DATE");/////
+                  String nomTache = data.getStringExtra("EXTRA_NOM");
+                  String descriptionTache = data.getStringExtra("EXTRA_DESCRIPTION");
+                  String dateTache = data.getStringExtra("EXTRA_DATE");
                   if (nomTache != "" && descriptionTache != "" && dateTache != "") {
                       ajouterNouvelleTache(nomTache, descriptionTache, dateTache);
                       mAdapter.echangerCurseur(obtenirTache());
                   }
-                //  }
+
             }
         }
     }

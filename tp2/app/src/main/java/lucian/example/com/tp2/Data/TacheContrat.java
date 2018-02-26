@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
  * Created by lucian on 2018-02-16.
  */
 
+//classe permettant de definir les donnees de la base de donnees (le contrat)
 public class TacheContrat {
     private TacheContrat() {}
 

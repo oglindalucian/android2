@@ -9,23 +9,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+//classe qui nous aide à créer la base de données, à gérer les changements du schema dans la BD
+//et d’accéder aux données de la BD via des requêtes SQL
+
 public class TacheDBHelper extends SQLiteOpenHelper {
 
-    //private static TacheDBHelper dbInstance; ////
+
 
     private final static String DATABASE_NAME = "taches.db";
     private final static int DATABASE_VERSION = 1;
-
-  //  public static synchronized TacheDBHelper getInstance(Context context) { ////
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
-     //   if (dbInstance == null) {
-           // dbInstance = new TacheDBHelper(context.getApplicationContext());
-   //    }
-      //  return dbInstance;
-   // }
 
     public TacheDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,7 +42,5 @@ public class TacheDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Tache.NOM_TABLE);
         onCreate(sqLiteDatabase);
-        // sqLiteDatabase.execSQL("ALTER TABLE " + Tache.NOM_TABLE + " ADD COLUMN " +
-        //  Tache.COLONNE_DESCRIPTION_TACHE + " TEXT NOT NULL ");
     }
 }
